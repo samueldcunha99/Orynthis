@@ -1,0 +1,237 @@
+@import "tailwindcss";
+
+@theme {
+  /* Monochrome core, pulled from the ORYNTHIS wordmark. Paper is deliberately
+     NOT #fff: the product photography is shot on white and sits in white
+     cards, so a pure-white page stacked three identical whites and the
+     product never got an edge. Holding the page a step off white is what
+     turns those cards into objects on a surface. */
+  --color-ink: #0b0c0e;
+  --color-ink-soft: #16181b;
+  --color-paper: #f4f4f1;
+  --color-paper-alt: #e9e9e5;
+  --color-graphite: #5f646a;
+  --color-hairline: #d5d5d0;
+  --color-hairline-dark: #262a2e;
+
+  /* Every instrument in the range is graphite and brass. The accent is taken
+     off the hardware itself rather than from the usual electric blue, which
+     matched nothing the site actually sells. Brass is light, so anything
+     sitting ON it takes ink, never white. */
+  --color-accent: #a8763a;
+  --color-accent-lift: #c08d4a;
+  /* Darkened for text on paper — the surface brass is only 3.6:1 there. */
+  --color-accent-text: #7a5423;
+
+  /* Ember appears only where the content is literally temperature. */
+  --color-ember: #ff4d1f;
+
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  * { border-color: var(--color-hairline); }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  ::selection { background: var(--color-accent); color: var(--color-ink); }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+}
+
+@layer components {
+  /* ---- Type roles -------------------------------------------------- */
+
+  /* The display face is Archivo pushed to its widest optical width (125).
+     Expansion is the type doing what the products do: moving air outward. */
+  .t-display {
+    font-family: var(--font-display);
+    font-variation-settings: "wdth" 125;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.025em;
+    line-height: 0.88;
+  }
+
+  .t-display-tight {
+    font-family: var(--font-display);
+    font-variation-settings: "wdth" 112;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    line-height: 1.02;
+  }
+
+  /* Utility face carries data: specs, prices, eyebrows, labels. */
+  .t-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+
+  .t-data {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+
+  /* ---- Controls ---------------------------------------------------- */
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    padding: 0.9375rem 1.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    border: 1px solid transparent;
+    transition: background 0.25s, color 0.25s, border-color 0.25s;
+  }
+
+  .btn-accent { background: var(--color-accent); color: var(--color-ink); }
+  .btn-accent:hover { background: var(--color-accent-lift); }
+
+  .btn-ink { background: var(--color-ink); color: var(--color-paper-alt); }
+  .btn-ink:hover { background: var(--color-accent); }
+
+  .btn-line {
+    border-color: currentColor;
+    background: transparent;
+  }
+  .btn-line:hover { background: currentColor; }
+  /* The fill is currentColor, so the label has to end up as its opposite.
+     `mix-blend-mode: difference` cannot do that — differencing a colour with
+     itself gives black, which put black text on a black fill (1.07:1).
+     Inverting the label works from whichever colour the button was given, so
+     it holds on the dark cart button as well as the light ones. */
+  .btn-line:hover > span { filter: invert(1); }
+
+  /* Strip-sized. The marketplace buttons need to read as buttons in a bar
+     that is only a couple of rems tall. */
+  .btn-sm {
+    padding: 0.4375rem 0.875rem;
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    gap: 0.4375rem;
+  }
+
+  .btn:disabled { opacity: 0.4; pointer-events: none; }
+
+  /* ---- Layout ------------------------------------------------------ */
+
+  .shell {
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .shell { padding-inline: 2.5rem; }
+  }
+
+  /* Hairline grid — the structural device. Rules divide information,
+     they never decorate. */
+  .rule-t { border-top: 1px solid var(--color-hairline); }
+  .rule-b { border-bottom: 1px solid var(--color-hairline); }
+  .on-ink .rule-t { border-top-color: var(--color-hairline-dark); }
+  .on-ink .rule-b { border-bottom-color: var(--color-hairline-dark); }
+}
+
+/* ---- Motion -------------------------------------------------------- */
+
+/* The aperture: concentric rings that breathe and counter-rotate, taken
+   straight from the spiral inside the logo's O. This is the signature. */
+@keyframes aperture-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes aperture-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.55; }
+  50% { transform: scale(1.045); opacity: 0.9; }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes draw {
+  from { stroke-dashoffset: var(--dash, 400); }
+  to { stroke-dashoffset: 0; }
+}
+
+.spin-slow { animation: aperture-spin 34s linear infinite; transform-origin: center; }
+.spin-rev { animation: aperture-spin 52s linear infinite reverse; transform-origin: center; }
+.breathe { animation: aperture-breathe 7s ease-in-out infinite; transform-origin: center; }
+
+/* Load sequence: hero elements arrive in order rather than all at once. */
+.rise { opacity: 0; animation: rise 0.9s var(--ease-out-expo) forwards; }
+
+/* Scroll reveal — one IntersectionObserver, no animation library. */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+}
+.reveal.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .spin-slow, .spin-rev, .breathe, .rise { animation: none; }
+  .rise { opacity: 1; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Marquee-free scroll rail for the gallery strip. */
+.no-bar { scrollbar-width: none; }
+.no-bar::-webkit-scrollbar { display: none; }
+
+/* Graphite is tuned for paper. On ink it needs lifting to clear AA at small
+   sizes — unlayered, so it wins over the Tailwind utility it corrects. */
+.on-ink .text-graphite { color: #9aa0a6; }
+
+/* Hero rotator: slide crossfade and the auto-advance progress marker. */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.fade-in { animation: fade-in 0.6s var(--ease-out-expo) both; }
+.progress { animation: progress var(--dwell, 7s) linear both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in { animation: none; }
+  .progress { animation: none; transform: scaleX(1); }
+}
