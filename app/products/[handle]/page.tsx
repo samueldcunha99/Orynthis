@@ -7,7 +7,7 @@ import { HeatScale } from "@/components/CoandaDiagram";
 import { ProductCard } from "@/components/ProductCard";
 import { Reveal } from "@/components/Reveal";
 import {
-  STORE,
+  SITE,
   byHandle,
   discount,
   inr,
@@ -15,6 +15,7 @@ import {
   products,
   stars,
 } from "@/lib/products";
+import { getProduct, getProducts } from "@/lib/shopify";
 
 type Props = { params: Promise<{ handle: string }> };
 
@@ -39,12 +40,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProductPage({ params }: Props) {
-  const p = byHandle((await params).handle);
+  // Live: price, sale price, variant and stock all come from Shopify here,
+  // so this page is what the checkout will actually charge.
+  const p = await getProduct((await params).handle);
   if (!p) notFound();
 
   const off = discount(p);
   const buyable = isBuyable(p);
-  const others = products.filter((x) => x.handle !== p.handle);
+  const others = (await getProducts()).filter((x) => x.handle !== p.handle);
 
   /* Product schema. `offers` is emitted only where the product can actually
      be bought here — advertising a purchasable price the site cannot take
@@ -56,16 +59,23 @@ export default async function ProductPage({ params }: Props) {
     description: p.thesis,
     category: p.category,
     brand: { "@type": "Brand", name: "Orynthis" },
-    image: p.images.map((src) => `${STORE}${src}`),
-    ...(buyable && {
-      offers: {
-        "@type": "Offer",
-        price: p.price,
-        priceCurrency: "INR",
-        availability: "https://schema.org/InStock",
-        url: `${STORE}/products/${p.handle}`,
-      },
-    }),
+    image: p.images.map((src) => `${SITE}${src}`),
+    ...(p.price !== null &&
+      p.variantId !== null && {
+        offers: {
+          "@type": "Offer",
+          price: p.price,
+          priceCurrency: "INR",
+          // Listed but sold out is still an offer, and saying so beats
+          // dropping the block — Google reads a missing offer as no price at
+          // all, where OutOfStock keeps the listing and marks it honestly.
+          availability:
+            p.available === false
+              ? "https://schema.org/OutOfStock"
+              : "https://schema.org/InStock",
+          url: `${SITE}/products/${p.handle}`,
+        },
+      }),
     ...(p.reviews && {
       aggregateRating: {
         "@type": "AggregateRating",

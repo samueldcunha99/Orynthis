@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { products, STORE } from "@/lib/products";
+import { products, SHOP } from "@/lib/products";
 import { Mark } from "./Mark";
 
 const policies = [
-  { href: `${STORE}/policies/privacy-policy`, label: "Privacy policy" },
-  { href: `${STORE}/policies/refund-policy`, label: "Refund policy" },
-  { href: `${STORE}/policies/terms-of-service`, label: "Terms of service" },
+  { href: `${SHOP}/policies/privacy-policy`, label: "Privacy policy" },
+  { href: `${SHOP}/policies/refund-policy`, label: "Refund policy" },
+  { href: `${SHOP}/policies/terms-of-service`, label: "Terms of service" },
 ];
 
 export function Footer() {
@@ -25,7 +25,7 @@ export function Footer() {
           </div>
 
           <form
-            action={`${STORE}#footer-newsletter`}
+            action={`${SHOP}#footer-newsletter`}
             method="post"
             className="flex w-full max-w-md items-center gap-0 border-b border-hairline-dark focus-within:border-accent"
           >

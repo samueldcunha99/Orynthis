@@ -9,7 +9,7 @@ import {
 } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { byHandle, checkoutUrl, inr, products } from "@/lib/products";
+import { checkoutUrl, inr, type Product } from "@/lib/products";
 
 type Line = { handle: string; qty: number };
 
@@ -26,13 +26,33 @@ type CartApi = {
 const Ctx = createContext<CartApi | null>(null);
 const KEY = "orynthis.cart";
 
+/* The catalogue is fetched from Shopify on the server (lib/shopify.ts) and
+   handed down from the root layout, because the client has no business
+   holding a Storefront token. Everything below reads prices and variant ids
+   from here rather than from the hardcoded array, so a price change in the
+   admin reaches the cart without a deploy. */
+const CatalogCtx = createContext<Product[]>([]);
+
+export const useCatalog = () => useContext(CatalogCtx);
+
+/** Live product by handle. Falls back to undefined so callers keep their
+    existing "unlisted product" branches. */
+export const useProduct = (handle: string) =>
+  useCatalog().find((p) => p.handle === handle);
+
 export function useCart() {
   const c = useContext(Ctx);
   if (!c) throw new Error("useCart must be used inside <CartProvider>");
   return c;
 }
 
-export function CartProvider({ children }: { children: ReactNode }) {
+export function CartProvider({
+  children,
+  catalog,
+}: {
+  children: ReactNode;
+  catalog: Product[];
+}) {
   const [lines, setLines] = useState<Line[]>([]);
   const [open, setOpen] = useState(false);
 
@@ -85,26 +105,33 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const count = lines.reduce((n, l) => n + l.qty, 0);
   const subtotal = lines.reduce(
-    (n, l) => n + (byHandle(l.handle)?.price ?? 0) * l.qty,
+    (n, l) => n + (catalog.find((p) => p.handle === l.handle)?.price ?? 0) * l.qty,
     0,
   );
 
   return (
-    <Ctx.Provider value={{ lines, count, subtotal, add, setQty, open, setOpen }}>
-      {children}
-      <Drawer />
-    </Ctx.Provider>
+    <CatalogCtx.Provider value={catalog}>
+      <Ctx.Provider value={{ lines, count, subtotal, add, setQty, open, setOpen }}>
+        {children}
+        <Drawer />
+      </Ctx.Provider>
+    </CatalogCtx.Provider>
   );
 }
 
 function Drawer() {
   const { lines, subtotal, setQty, open, setOpen } = useCart();
+  const catalog = useCatalog();
+  const find = (handle: string) => catalog.find((p) => p.handle === handle);
 
   const href = checkoutUrl(
     lines.flatMap((l) => {
-      const p = byHandle(l.handle);
-      // Unlisted products have no variant, so they cannot be part of a checkout.
-      return p?.variantId ? [{ variantId: p.variantId, qty: l.qty }] : [];
+      const p = find(l.handle);
+      // Unlisted and sold-out products have no variant to send, so they
+      // cannot be part of a checkout.
+      return p?.variantId && p.available !== false
+        ? [{ variantId: p.variantId, qty: l.qty }]
+        : [];
     }),
   );
 
@@ -158,7 +185,7 @@ function Drawer() {
           <>
             <ul className="flex-1 overflow-y-auto">
               {lines.map((l) => {
-                const p = byHandle(l.handle);
+                const p = find(l.handle);
                 if (!p) return null;
                 return (
                   <li key={l.handle} className="rule-b flex gap-4 px-6 py-5">
@@ -178,9 +205,15 @@ function Drawer() {
                       <p className="t-label mt-1 text-graphite">{p.series}</p>
                       <div className="mt-3 flex items-center justify-between">
                         <Qty value={l.qty} onChange={(v) => setQty(l.handle, v)} />
-                        <span className="t-data text-sm">
-                          {inr((p.price ?? 0) * l.qty)}
-                        </span>
+                        {/* Sold-out lines are dropped from the checkout link,
+                            so they have to be visibly dropped here too. */}
+                        {p.available === false ? (
+                          <span className="t-label text-accent">Sold out</span>
+                        ) : (
+                          <span className="t-data text-sm">
+                            {inr((p.price ?? 0) * l.qty)}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </li>
@@ -249,7 +282,7 @@ export function AddButton({
   label?: string;
 }) {
   const { add } = useCart();
-  const name = products.find((p) => p.handle === handle)?.name ?? "item";
+  const name = useProduct(handle)?.name ?? "item";
   return (
     <button
       onClick={() => add(handle)}

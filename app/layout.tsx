@@ -4,6 +4,8 @@ import "./globals.css";
 import { CartProvider } from "@/components/Cart";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { SITE } from "@/lib/products";
+import { getProducts } from "@/lib/shopify";
 
 /* Display: Archivo, loaded with its width axis so it can be pushed wide.
    Expansion is the type doing what the products do — moving air outward. */
@@ -29,7 +31,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://orynthis.com"),
+  metadataBase: new URL(SITE),
   title: {
     default: "Orynthis — Instruments built around moving air",
     template: "%s — Orynthis",
@@ -44,9 +46,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  /* One Storefront round trip per request, shared by every client component
+     under the tree. React caches it, so the pages below pay nothing to read
+     the same catalogue again. */
+  const catalog = await getProducts();
+
   return (
     <html
       lang="en"
@@ -59,7 +66,7 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <CartProvider>
+        <CartProvider catalog={catalog}>
           <Header />
           <main id="main">{children}</main>
           <Footer />

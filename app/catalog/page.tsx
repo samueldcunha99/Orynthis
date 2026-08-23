@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ProductCard } from "@/components/ProductCard";
 import { Reveal } from "@/components/Reveal";
-import { products } from "@/lib/products";
+import { getProducts } from "@/lib/shopify";
 
 export const metadata: Metadata = {
   title: "The range",
@@ -9,7 +9,9 @@ export const metadata: Metadata = {
     "Every Orynthis instrument: multi-stylers built on Coanda airflow, AI smart glasses, portable and shelf Bluetooth speakers, and a double burner that runs two thermostats.",
 };
 
-export default function Catalog() {
+export default async function Catalog() {
+  const products = await getProducts();
+
   return (
     <div className="shell py-16 lg:py-24">
       <Reveal className="rule-b pb-8">

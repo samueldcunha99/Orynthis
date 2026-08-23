@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { byHandle, discount, heroSlides, inr } from "@/lib/products";
+import { useProduct } from "./Cart";
 
 // Dwell per slide. The progress marker reads this too (--dwell), so changing
 // it here moves the bar and the slide together.
@@ -74,7 +75,10 @@ export function HeroRotator() {
   };
 
   const slide = heroSlides[i];
-  const product = byHandle(slide.handle)!;
+  // Editorial copy is local; price and stock come from Shopify through the
+  // cart provider. byHandle is the fallback for the first paint and for a
+  // product Shopify has not answered for.
+  const product = useProduct(slide.handle) ?? byHandle(slide.handle)!;
   const off = discount(product);
   const running = !paused && !still;
 

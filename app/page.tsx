@@ -4,10 +4,13 @@ import { CoandaDiagram, HeatScale } from "@/components/CoandaDiagram";
 import { HeroRotator } from "@/components/HeroRotator";
 import { ProductCard } from "@/components/ProductCard";
 import { Reveal } from "@/components/Reveal";
-import { MARKETPLACES, products } from "@/lib/products";
+import { MARKETPLACES } from "@/lib/products";
+import { getProducts } from "@/lib/shopify";
 
 
-export default function Home() {
+export default async function Home() {
+  const products = await getProducts();
+
   return (
     <>
       <HeroRotator />

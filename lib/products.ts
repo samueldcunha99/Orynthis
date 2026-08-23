@@ -7,11 +7,19 @@ export type Product = {
   category: "Hair" | "Wearable" | "Kitchen" | "Audio" | "Accessory";
   /** One line. What the thing is, in the buyer's words, not the spec sheet's. */
   line: string;
-  /** null until the product is priced on the store. Renders "price on request". */
+  /** Fallback price, used only until Shopify answers — see lib/shopify.ts.
+      null until the product is priced on the store, which renders
+      "price on request". */
   price: number | null;
   compareAt: number | null;
-  /** Shopify variant id. null means not listed yet, so it cannot be checked out. */
+  /** Shopify variant id. null means not listed yet, so it cannot be checked
+      out. Overwritten by the live variant id once the Storefront API is
+      wired, so a re-published product does not need a code change. */
   variantId: string | null;
+  /** Live stock, from Shopify. Absent means nobody has asked Shopify yet, and
+      an unknown stock level is treated as in stock — the checkout is the one
+      that gets the final say either way. */
+  available?: boolean;
   images: string[];
   /** The claim the product is actually built on. */
   thesis: string;
@@ -367,12 +375,24 @@ export const stars = (n: number) =>
 export const discount = (p: Product) =>
   p.compareAt && p.price ? Math.round((1 - p.price / p.compareAt) * 100) : 0;
 
-/** A product can only be bought once it has a price and a Shopify variant. */
+/** A product can only be bought once it has a price and a Shopify variant,
+    and only while Shopify still says it is in stock. Every buy path goes
+    through here — card, product page, cart — so the sold-out case is handled
+    once rather than at each button. */
 export const isBuyable = (p: Product): boolean =>
-  p.price !== null && p.variantId !== null;
+  p.price !== null && p.variantId !== null && p.available !== false;
 
-/** Shopify cart permalink — sends a real basket to the real checkout. */
-export const STORE = "https://orynthis.com";
+/**
+ * Two origins, because going headless splits them.
+ *
+ * SITE is this front end — canonical URLs, the sitemap, schema.org. SHOP is
+ * Shopify, which still owns checkout, customer accounts and the policy pages.
+ * Today they are the same host, so SHOP defaults to SITE and nothing changes.
+ * When orynthis.com is repointed at Vercel and Shopify moves to a subdomain,
+ * setting NEXT_PUBLIC_SHOP_URL is the whole migration for this file.
+ */
+export const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://orynthis.com";
+export const SHOP = process.env.NEXT_PUBLIC_SHOP_URL ?? SITE;
 
 /** Where most of the volume actually goes.
     The Amazon URL is the brand store with its click-attribution parameters
@@ -394,8 +414,9 @@ export const MARKETPLACES = [
   },
 ];
 
+/** Shopify cart permalink — sends a real basket to the real checkout. */
 export const checkoutUrl = (items: { variantId: string; qty: number }[]) =>
-  `${STORE}/cart/${items.map((i) => `${i.variantId}:${i.qty}`).join(",")}`;
+  `${SHOP}/cart/${items.map((i) => `${i.variantId}:${i.qty}`).join(",")}`;
 
 /**
  * Hero rotation. One slide per product, each led by what that product actually

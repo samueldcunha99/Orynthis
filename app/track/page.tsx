@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Reveal } from "@/components/Reveal";
-import { STORE } from "@/lib/products";
+import { SHOP } from "@/lib/products";
 import { SUPPORT_EMAIL } from "@/components/ContactForm";
 
 export const metadata: Metadata = {
@@ -20,7 +20,7 @@ const routes = [
   {
     label: "Your account",
     body: "If you ordered while signed in, every order and its current status sits in your account.",
-    action: { href: `${STORE}/account`, label: "Open your account", ext: true },
+    action: { href: `${SHOP}/account`, label: "Open your account", ext: true },
   },
   {
     label: "Ask us",
