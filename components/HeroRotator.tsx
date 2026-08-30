@@ -192,7 +192,11 @@ export function HeroRotator() {
                 role="tab"
                 aria-selected={active}
                 onClick={() => setI(n)}
-                className="group relative w-1/3 shrink-0 snap-center border-l border-hairline px-3 py-5 text-left first:border-l-0 sm:w-1/5 sm:px-4 lg:w-[calc(100%/7)]"
+                /* Widths are fractions, not a hardcoded column count. This read
+                   lg:w-[calc(100%/7)] until the range changed size, and a
+                   product being removed left a seventh of the rail empty.
+                   flex-1 divides by however many slides there are. */
+                className="group relative w-1/3 shrink-0 snap-center border-l border-hairline px-3 py-5 text-left first:border-l-0 sm:w-1/5 sm:px-4 lg:w-auto lg:flex-1 lg:shrink"
               >
                 <span
                   className={`relative block aspect-87/61 w-full overflow-hidden bg-white ring-1 transition-all duration-500 ${
@@ -202,7 +206,7 @@ export function HeroRotator() {
                   }`}
                 >
                   <Image
-                    src={s.image}
+                    src={s.thumb ?? s.image}
                     alt=""
                     fill
                     sizes="(min-width:1024px) 190px, 33vw"

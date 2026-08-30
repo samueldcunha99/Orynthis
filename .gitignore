@@ -34,6 +34,12 @@ yarn-error.log*
 .env*
 # The example carries no secrets and is how the next person knows what to set.
 !.env.example
+# Wrangler's local secret store - real token, must never be committed.
+.dev.vars
+# WhatsApp originals - the renamed copies in public/images are what ship.
+/image-originals/
+.open-next/
+.wrangler/
 
 # vercel
 .vercel

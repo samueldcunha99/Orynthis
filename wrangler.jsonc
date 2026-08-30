@@ -1,0 +1,49 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "orynthis",
+  "compatibility_date": "2026-08-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+
+  // Routing is via custom domains (preview.orynthis.com, later orynthis.com),
+  // so there is no workers.dev subdomain on this account and no need for one.
+  // Without this, every deploy uploads fine and then fails on the last step
+  // trying to publish to a workers.dev address that does not exist.
+  "workers_dev": false,
+
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+
+  // Revalidation calls the Worker back into itself; the service name has to
+  // match "name" above or ISR silently never refreshes.
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "orynthis"
+    }
+  ],
+
+  // ISR cache, currently OFF — see open-next.config.ts. Re-enable this block
+  // and the override together, never one without the other.
+  // "r2_buckets": [
+  //   {
+  //     "binding": "NEXT_INC_CACHE_R2_BUCKET",
+  //     "bucket_name": "orynthis-opennext-cache"
+  //   }
+  // ],
+
+  // next/image optimisation. Every product photo is a local webp, so this is
+  // what keeps them from shipping at full resolution.
+  "images": {
+    "binding": "IMAGES"
+  },
+
+  // Non-secret runtime config. The Storefront token is NOT here — it goes in
+  // as a secret:  npx wrangler secret put SHOPIFY_STOREFRONT_PRIVATE_TOKEN
+  "vars": {
+    "SHOPIFY_STORE_DOMAIN": "orynthis.myshopify.com",
+    "SHOPIFY_API_VERSION": "2025-10"
+  }
+}

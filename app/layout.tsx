@@ -36,8 +36,10 @@ export const metadata: Metadata = {
     default: "Orynthis — Instruments built around moving air",
     template: "%s — Orynthis",
   },
+  /* Kept under ~155 characters: past that Google truncates mid-sentence and
+     the last clause never reaches anyone. */
   description:
-    "Hair styling tools, smart glasses, Bluetooth speakers and kitchen appliances engineered around what they actually do, not shortcuts. Free shipping across India, one year warranty.",
+    "Hair stylers, smart glasses, Bluetooth speakers and kitchen appliances built around what they actually do. Free shipping across India, one year warranty.",
   openGraph: {
     title: "Orynthis — Instruments built around moving air",
     description:

@@ -169,6 +169,22 @@ export default async function Home() {
             </div>
           </Reveal>
 
+          {/* The brand's own campaign banner makes the same argument this
+              section does — air shapes the curl, heat does not — so it sits
+              directly under the diagram rather than in a gallery nobody
+              reaches. Full bleed and object-contain: the artwork is 2.4:1
+              with type positioned across it, and cropping it cuts words. */}
+          <Reveal className="rule-t mt-16 pt-12">
+            <Image
+              src="/images/air-ultra-pro-m07.jpeg"
+              alt="Air Ultra Pro: airflow wraps a section around the barrel in four steps — attract, wrap, curl, then a cool shot to set."
+              width={1600}
+              height={656}
+              sizes="100vw"
+              className="h-auto w-full bg-white"
+            />
+          </Reveal>
+
           <Reveal className="rule-t mt-16 grid gap-10 pt-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
             <div>
               <h3 className="t-display-tight text-2xl">Three real temperatures</h3>

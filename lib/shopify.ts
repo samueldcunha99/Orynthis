@@ -17,11 +17,22 @@ import { products as editorial, type Product } from "./products";
  * land before the credentials do.
  */
 
-const DOMAIN = process.env.SHOPIFY_STORE_DOMAIN ?? "orynthis.myshopify.com";
-const TOKEN = process.env.SHOPIFY_STOREFRONT_TOKEN;
-/* Pinned rather than floating: Shopify supports a version for 12 months, and
-   an unattended bump is how a storefront breaks on a Tuesday morning. */
-const VERSION = process.env.SHOPIFY_API_VERSION ?? "2025-10";
+/* Read lazily, never at module scope. Cloudflare Workers do not populate env
+   until a request is in flight, so a top-level process.env read there is
+   undefined — which would fall through to the editorial prices and look
+   entirely healthy while serving stale numbers. The one failure mode this
+   whole file exists to prevent. */
+const env = () => ({
+  domain: process.env.SHOPIFY_STORE_DOMAIN ?? "orynthis.myshopify.com",
+  version: process.env.SHOPIFY_API_VERSION ?? "2025-10",
+  /* Either kind of Storefront token works, and they take different headers.
+     Private is the better fit — every call here is server-side, and it is
+     rate-limited per app rather than per IP, which matters because Workers
+     share outbound IPs. Public is accepted so an existing token is not
+     wasted. */
+  privateToken: process.env.SHOPIFY_STOREFRONT_PRIVATE_TOKEN,
+  publicToken: process.env.SHOPIFY_STOREFRONT_TOKEN,
+});
 
 /** How long a price may be stale, in seconds. */
 const TTL = 300;
@@ -81,13 +92,16 @@ const numericId = (gid: string): string | null =>
 
 async function fetchCommerce(): Promise<Map<string, Commerce>> {
   const out = new Map<string, Commerce>();
-  if (!TOKEN) return out;
+  const { domain, version, privateToken, publicToken } = env();
+  if (!privateToken && !publicToken) return out;
 
-  const res = await fetch(`https://${DOMAIN}/api/${VERSION}/graphql.json`, {
+  const res = await fetch(`https://${domain}/api/${version}/graphql.json`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-Shopify-Storefront-Access-Token": TOKEN,
+      ...(privateToken
+        ? { "Shopify-Storefront-Private-Token": privateToken }
+        : { "X-Shopify-Storefront-Access-Token": publicToken! }),
     },
     body: JSON.stringify({ query: QUERY }),
     next: { revalidate: TTL, tags: ["catalog"] },
@@ -131,8 +145,23 @@ export const getProducts = cache(async (): Promise<Product[]> => {
     console.error("[shopify] falling back to editorial prices:", err);
   }
 
+  // A product we expected to find and did not is worth saying out loud. This
+  // is how the join silently did nothing the first time it ran: Shopify's
+  // handles are the long keyword ones, ours are short, and nothing matched.
+  const missing = editorial
+    .filter((p) => p.shopifyHandle && live.size > 0 && !live.has(p.shopifyHandle))
+    .map((p) => p.handle);
+  if (missing.length) {
+    console.warn(
+      `[shopify] no live match for ${missing.join(", ")} — check shopifyHandle ` +
+        `in lib/products.ts against the product's handle in the admin`,
+    );
+  }
+
   return editorial.map((p) => {
-    const c = live.get(p.handle);
+    const c = p.shopifyHandle ? live.get(p.shopifyHandle) : undefined;
+    // No mapping, or no match: the product is not sold through Shopify, so
+    // the editorial figures stand and stock is nobody's business.
     if (!c) return { ...p, available: true };
     return {
       ...p,

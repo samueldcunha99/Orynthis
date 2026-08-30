@@ -16,6 +16,12 @@ export type Product = {
       out. Overwritten by the live variant id once the Storefront API is
       wired, so a re-published product does not need a code change. */
   variantId: string | null;
+  /** The handle this product has ON SHOPIFY, which is not the handle it has
+      here. Shopify's are the long keyword strings the marketplace listings
+      were written for; ours are short because they are URLs people read.
+      This is the join key for the live merge — absent means the product is
+      not on Shopify at all and stays entirely editorial. */
+  shopifyHandle?: string;
   /** Live stock, from Shopify. Absent means nobody has asked Shopify yet, and
       an unknown stock level is treated as in stock — the checkout is the one
       that gets the final say either way. */
@@ -39,14 +45,22 @@ export const products: Product[] = [
     price: 7499,
     compareAt: 15000,
     variantId: "58513360814161",
-    // -01 leads: the range shot with every attachment numbered. It is 16:10,
-    // so the card renders it whole rather than cropping into the callouts.
+    shopifyHandle:
+      "air-ultra-pro-series-5-in-1-hair-styling-system-with-bldc-digital-motor-curl-dry-smooth-and-volumize-heat-protective-airflow-home-styling-tool-for-women-and-girls",
+    /* The 2026 brand set only. The old marketplace files are dropped: they
+       are screenshot-quality composites with the seller's own captions
+       burned in and cropped through — -01 had a line of text sliced off at
+       the top. m09 leads because it is the one clean device shot. */
     images: [
-      "/images/air-ultra-pro-01.webp",
-      "/images/air-ultra-pro-02.webp",
-      "/images/air-ultra-pro-03.webp",
-      "/images/air-ultra-pro-04.webp",
-      "/images/air-ultra-pro-05.webp",
+      "/images/air-ultra-pro-m09.jpeg",
+      "/images/air-ultra-pro-m01.jpeg",
+      "/images/air-ultra-pro-m02.jpeg",
+      "/images/air-ultra-pro-m03.jpeg",
+      "/images/air-ultra-pro-m04.jpeg",
+      "/images/air-ultra-pro-m05.jpeg",
+      "/images/air-ultra-pro-m06.jpeg",
+      "/images/air-ultra-pro-m07.jpeg",
+      "/images/air-ultra-pro-m08.jpeg",
     ],
     thesis: "Curls formed by airflow, not by a hot plate pressed against your hair.",
     body:
@@ -82,15 +96,30 @@ export const products: Product[] = [
     series: "Multi-Styler",
     category: "Hair",
     line: "Six attachments, ionic airflow, one handle.",
-    price: 3578,
-    compareAt: 8999,
+    price: 3999,
+    compareAt: 11999,
     variantId: "58473003024465",
+    shopifyHandle:
+      "6-in-1-multi-styler-hair-styling-tools-interchangeable-volumizer-secador-de-cabelo-hot-air-brush-blow-brush-hair-dryer",
+    /* Brand set only, same reasoning as the Pro. m08 and m07 lead — they are
+       the two clean white shots of the handle with every attachment laid
+       out, which is what a card thumbnail needs to be legible. */
     images: [
-      "/images/air-ultra-6-in-1-01.webp",
-      "/images/air-ultra-6-in-1-02.webp",
-      "/images/air-ultra-6-in-1-03.webp",
-      "/images/air-ultra-6-in-1-04.webp",
-      "/images/air-ultra-6-in-1-05.webp",
+      "/images/air-ultra-6-in-1-m08.jpeg",
+      "/images/air-ultra-6-in-1-m07.jpeg",
+      "/images/air-ultra-6-in-1-m01.jpeg",
+      "/images/air-ultra-6-in-1-m02.jpeg",
+      "/images/air-ultra-6-in-1-m03.jpeg",
+      "/images/air-ultra-6-in-1-m04.jpeg",
+      "/images/air-ultra-6-in-1-m05.jpeg",
+      "/images/air-ultra-6-in-1-m06.jpeg",
+      "/images/air-ultra-6-in-1-m09.jpeg",
+      "/images/air-ultra-6-in-1-m10.jpeg",
+      "/images/air-ultra-6-in-1-m11.jpeg",
+      "/images/air-ultra-6-in-1-m12.jpeg",
+      "/images/air-ultra-6-in-1-m13.jpeg",
+      "/images/air-ultra-6-in-1-m14.jpeg",
+      "/images/air-ultra-6-in-1-m15.jpeg",
     ],
     thesis: "The whole drawer of styling tools, reduced to one handle and six heads.",
     body:
@@ -132,6 +161,8 @@ export const products: Product[] = [
     price: 7999,
     compareAt: 12000,
     variantId: "58472968978513",
+    shopifyHandle:
+      "air-vision-ai-smart-glasses-with-8mp-hd-camera-for-hands-free-photo-and-video-ai-voice-assistant-object-recognition-bluetooth-5-3-dual-mic-noise-reduction-smart-wearable-for-daily-use",
     images: [
       "/images/air-vision-ai-01.webp",
       "/images/air-vision-ai-02.webp",
@@ -162,50 +193,6 @@ export const products: Product[] = [
       { label: "Microphones", value: "Dual, ENC noise reduction" },
       { label: "Playback", value: "Up to 12 hours" },
       { label: "Lenses", value: "Detachable" },
-      { label: "Warranty", value: "1 year" },
-    ],
-    reviews: null,
-  },
-  {
-    handle: "easycook-2000w",
-    name: "EasyCook 2000W",
-    series: "Double Burner",
-    category: "Kitchen",
-    line: "Two plates, two thermostats, boiling and simmering at once.",
-    price: 3899,
-    compareAt: null,
-    variantId: "59440210018385",
-    // Only one usable file exists for this product — the other five on
-    // Shopify are 100x100 thumbnails. Upscaling those looks worse than
-    // a single image, so the gallery shows what is actually there.
-    images: [
-      "/images/easycook-2000w-01.webp",
-    ],
-    thesis: "Two independent 1000 W elements, so one pot simmers while the other boils.",
-    body:
-      "Each plate carries its own thermostat, so the dial on the left has nothing to do with the dial on the right. Cast iron holds temperature through the whole cook. Stainless steel body, overheat cut-off, non-slip feet, and small enough for a hostel room or a second kitchen.",
-    features: [
-      {
-        title: "Two separate circuits",
-        text: "1000 W each, controlled independently. A gentle simmer on one plate is unaffected by a rolling boil on the other.",
-      },
-      {
-        title: "Cast iron plates",
-        text: "Heavy plates absorb heat and give it back evenly, so temperature holds instead of swinging with the thermostat.",
-      },
-      {
-        title: "Built to stay put",
-        text: "Anti-rust stainless steel body, built-in overheat protection, and non-slip rubber feet under 3.2 kg of mass.",
-      },
-    ],
-    specs: [
-      { label: "Total power", value: "2000 W" },
-      { label: "Elements", value: "2 × 1000 W" },
-      { label: "Body", value: "Stainless steel" },
-      { label: "Plates", value: "Cast iron" },
-      { label: "Dimensions", value: "45 × 23 × 7 cm" },
-      { label: "Weight", value: "3.2 kg" },
-      { label: "Control", value: "Adjustable thermostat" },
       { label: "Warranty", value: "1 year" },
     ],
     reviews: null,
@@ -432,10 +419,30 @@ export type HeroSlide = {
   headline: [string, string];
   copy: string;
   image: string;
+  /** Thumbnail for the switcher rail, when the hero image does not survive
+      being shrunk to 160px. The campaign graphics are the case in point:
+      they carry the argument at full size and read as noise at thumbnail
+      size, next to five clean product shots. Defaults to `image`. */
+  thumb?: string;
   stats: { v: string; u: string; k: string }[];
 };
 
 export const heroSlides: HeroSlide[] = [
+  {
+    handle: "air-ultra-pro",
+    headline: ["Air does", "the work"],
+    copy: "Fast air clings to the barrel, catches the hair and wraps it there. The curl is formed by pressure, not by a hot plate held against your head.",
+    // 2026 brand set. 1.500 against the hero frame's 1.426, so it fills
+    // the panel with only a hairline of letterbox.
+    image: "/images/air-ultra-pro-m01.jpeg",
+    thumb: "/brand/hero-air-ultra-pro.webp",
+    stats: [
+      { v: "1300", u: "W", k: "BLDC motor" },
+      { v: "5", u: "heads", k: "Magnetic" },
+      { v: "3", u: "modes", k: "Heat control" },
+      { v: "1", u: "year", k: "Warranty" },
+    ],
+  },
   {
     handle: "air-vision-ai",
     headline: ["Eyes up,", "hands free"],
@@ -449,22 +456,11 @@ export const heroSlides: HeroSlide[] = [
     ],
   },
   {
-    handle: "air-ultra-pro",
-    headline: ["Air does", "the work"],
-    copy: "Fast air clings to the barrel, catches the hair and wraps it there. The curl is formed by pressure, not by a hot plate held against your head.",
-    image: "/brand/hero-air-ultra-pro.webp",
-    stats: [
-      { v: "1300", u: "W", k: "BLDC motor" },
-      { v: "5", u: "heads", k: "Magnetic" },
-      { v: "3", u: "modes", k: "Heat control" },
-      { v: "1", u: "year", k: "Warranty" },
-    ],
-  },
-  {
     handle: "air-ultra-6-in-1",
     headline: ["Six tools,", "one handle"],
     copy: "Auto-wrap barrels coil a section on their own. A round brush builds volume, a flat one pulls it straight, and a 1000 W core moves the air behind both.",
-    image: "/brand/hero-air-ultra-6-in-1.webp",
+    image: "/images/air-ultra-6-in-1-m09.jpeg",
+    thumb: "/brand/hero-air-ultra-6-in-1.webp",
     stats: [
       { v: "12.5", u: "m/s", k: "Airflow" },
       { v: "1000", u: "W", k: "Dryer core" },
@@ -472,21 +468,6 @@ export const heroSlides: HeroSlide[] = [
       { v: "3", u: "levels", k: "Measured heat" },
     ],
   },
-  {
-    handle: "easycook-2000w",
-    headline: ["Two pots,", "two dials"],
-    copy: "Two 1000 W elements on separate thermostats, so a simmer on the left is unaffected by a rolling boil on the right. Cast iron holds the temperature.",
-    image: "/brand/hero-easycook-2000w.webp",
-    stats: [
-      { v: "2000", u: "W", k: "Total power" },
-      { v: "2", u: "plates", k: "Separate thermostats" },
-      { v: "45", u: "cm", k: "Footprint" },
-      { v: "1", u: "year", k: "Warranty" },
-    ],
-  },
-  // No branded crop exists for the last three, so the hero shows the same
-  // catalogue shot the product page leads with. They are square or near it
-  // rather than 1.425, which is why the hero frame contains rather than crops.
   {
     handle: "rockbox-vintage",
     headline: ["Three knobs,", "no app"],
