@@ -1,229 +1,56 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CoandaDiagram, HeatScale } from "@/components/CoandaDiagram";
-import { HeroRotator } from "@/components/HeroRotator";
-import { ProductCard } from "@/components/ProductCard";
-import { Reveal } from "@/components/Reveal";
-import { MARKETPLACES } from "@/lib/products";
+import { FeaturedCollection } from "@/components/FeaturedCollection";
+import { StoreIcon, type IconName } from "@/components/StoreIcon";
+import { MARKETPLACES, inr } from "@/lib/products";
 import { getProducts } from "@/lib/shopify";
 
-
+const benefits: { icon: IconName; title: string; text: string }[] = [
+  { icon: "truck", title: "On its way, on us", text: "Free shipping across India" },
+  { icon: "shield", title: "Made to be relied on", text: "1-year product warranty" },
+  { icon: "bag", title: "Shop with confidence", text: "Secure Shopify checkout" },
+  { icon: "headphones", title: "A little help, whenever", text: "Dedicated customer support" },
+];
 export default async function Home() {
   const products = await getProducts();
-
-  return (
-    <>
-      <HeroRotator />
-
-      {/* ── Trusted partners ──────────────────────────────────────────
-          Most of the volume goes through the marketplaces, so they get a
-          band of their own directly under the hero. The logos keep their
-          own white grounds — both marks are drawn for white and neither
-          brand permits recolouring. */}
-      <section className="rule-t bg-paper-alt">
-        <div className="shell py-14 lg:py-16">
-          <Reveal>
-            <h2 className="t-display text-center text-[clamp(1.75rem,4.5vw,2.75rem)]">
-              Our trusted partners
-            </h2>
-            <p className="mt-4 text-center text-graphite">
-              Every instrument is sold and shipped through both.
-            </p>
-          </Reveal>
-
-          <Reveal
-            delay={120}
-            className="mt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-10"
-          >
-            {MARKETPLACES.map((m) => (
-              <a
-                key={m.name}
-                href={m.href}
-                target="_blank"
-                rel="noreferrer"
-                title={`Orynthis on ${m.name} — ${m.label}`}
-                className="group flex h-28 w-60 items-center justify-center border border-hairline bg-white px-8 transition-colors hover:border-accent sm:h-32 sm:w-72"
-              >
-                <Image
-                  src={`/brand/${m.name.toLowerCase()}.webp`}
-                  alt={`Buy Orynthis on ${m.name}`}
-                  width={232}
-                  height={72}
-                  className="h-auto w-full max-w-[10rem] object-contain transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04] sm:max-w-[11rem]"
-                />
-                <span className="sr-only">(opens in a new tab)</span>
-              </a>
-            ))}
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ── The range ─────────────────────────────────────────────────── */}
-      <section className="shell py-20 lg:py-28">
-        <Reveal className="rule-b flex flex-wrap items-end justify-between gap-6 pb-8">
-          <div>
-            <p className="t-label text-graphite">
-              The range · {products.length} products
-            </p>
-            <h2 className="t-display mt-4 text-[clamp(2.25rem,6.5vw,4.5rem)]">
-              Everything we make
-            </h2>
-          </div>
-          <p className="max-w-[38ch] text-sm text-graphite">
-            A short range on purpose. Each one earns its place by doing a job
-            that otherwise takes two or three separate appliances.
-          </p>
-        </Reveal>
-
-        <div className="mt-12 grid gap-x-8 gap-y-16 sm:grid-cols-2">
-          {products.map((p, i) => (
-            <Reveal key={p.handle} delay={i * 90}>
-              <ProductCard product={p} priority={i < 2} />
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Brand band ────────────────────────────────────────────────
-          The whole range in one frame. Cropped from the store's own group
-          shot to drop the "Elevates Your Lifestyle" caption and watermark
-          — see public/brand/range-group.webp. The claim underneath is
-          consolidation, which every product here can actually back up. */}
-      <section className="rule-t">
-        <Reveal className="relative aspect-16/10 max-h-[70svh] w-full sm:aspect-[1536/700]">
-          <Image
-            src="/brand/range-group.webp"
-            alt="The Orynthis range together: smart glasses, styling barrels and volumising brushes"
-            fill
-            sizes="100vw"
-            className="object-cover object-[45%_center]"
-          />
-        </Reveal>
-
-        <div className="shell grid gap-8 py-16 lg:grid-cols-2 lg:items-end lg:py-20">
-          <Reveal>
-            <p className="t-label text-graphite">The whole range</p>
-            <h2 className="t-display mt-4 text-[clamp(2.25rem,6.5vw,4.5rem)]">
-              One tool where three used to be
-            </h2>
-          </Reveal>
-          <Reveal delay={120}>
-            <p className="max-w-[46ch] text-lg leading-relaxed text-graphite">
-              A styler that replaces a drawer of them. Glasses that are also a
-              camera and a pair of headphones. A burner running two pots on
-              separate dials. The range is short because each thing does the
-              work of several.
-            </p>
-            <Link href="/catalog" className="btn btn-ink mt-8">
-              <span>See the range</span>
-            </Link>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ── Technology ────────────────────────────────────────────────── */}
-      <section id="technology" className="scroll-mt-24 bg-paper-alt">
-        <div className="shell py-20 lg:py-28">
-          <Reveal className="rule-b pb-8">
-            <p className="t-label text-graphite">Technology · Air styling range</p>
-            <h2 className="t-display mt-4 max-w-[16ch] text-[clamp(2.25rem,6.5vw,4.5rem)]">
-              Heat is the shortcut
-            </h2>
-            <p className="mt-6 max-w-[52ch] text-lg leading-relaxed text-graphite">
-              Anything will set a curl if you make it hot enough. The harder
-              route is to move enough air, fast enough, in the right shape.
-            </p>
-          </Reveal>
-
-          <Reveal className="mt-14 grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
-            <div className="border border-hairline bg-paper p-4 sm:p-8">
-              <CoandaDiagram className="h-auto w-full" />
-            </div>
-
-            <div>
-              <h3 className="t-display-tight text-2xl">The Coanda effect</h3>
-              <p className="mt-4 leading-relaxed text-graphite">
-                A fast jet of air passing a curved surface will follow that
-                curve rather than travel straight on. Drop a hair section into
-                that stream and it gets carried around the barrel and held
-                there by the pressure difference.
-              </p>
-              <p className="mt-4 leading-relaxed text-graphite">
-                The shape sets while the air does the holding, which is why the
-                barrel never has to reach the temperature a curling iron does.
-              </p>
-
-              <dl className="rule-t mt-8 grid gap-x-8 gap-y-5 pt-8 sm:grid-cols-2">
-                {[
-                  ["Brushless drive", "Airflow stays constant under load"],
-                  ["Pulse-width heating", "Output holds where you set it"],
-                  ["Dual thermal cut-off", "Two independent safety circuits"],
-                  ["Magnetic attachments", "Swap heads mid-style, one hand"],
-                ].map(([t, d]) => (
-                  <div key={t}>
-                    <dt className="t-label">{t}</dt>
-                    <dd className="mt-1.5 text-sm text-graphite">{d}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          </Reveal>
-
-          {/* The brand's own campaign banner makes the same argument this
-              section does — air shapes the curl, heat does not — so it sits
-              directly under the diagram rather than in a gallery nobody
-              reaches. Full bleed and object-contain: the artwork is 2.4:1
-              with type positioned across it, and cropping it cuts words. */}
-          <Reveal className="rule-t mt-16 pt-12">
-            <Image
-              src="/images/air-ultra-pro-m07.jpeg"
-              alt="Air Ultra Pro: airflow wraps a section around the barrel in four steps — attract, wrap, curl, then a cool shot to set."
-              width={1600}
-              height={656}
-              sizes="100vw"
-              className="h-auto w-full bg-white"
-            />
-          </Reveal>
-
-          <Reveal className="rule-t mt-16 grid gap-10 pt-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
-            <div>
-              <h3 className="t-display-tight text-2xl">Three real temperatures</h3>
-              <p className="mt-4 max-w-[40ch] leading-relaxed text-graphite">
-                Not low, medium and high. Three measured settings, chosen for
-                three different jobs, held steady by the controller rather than
-                drifting as the element warms.
-              </p>
-            </div>
-            <HeatScale />
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ── Buying with us ────────────────────────────────────────────── */}
-      <section className="shell py-20 lg:py-24">
-        <Reveal>
-          <p className="t-label text-graphite">Buying with us</p>
-        </Reveal>
-        <div className="rule-t mt-6 grid sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            ["Free shipping", "Delivered anywhere in India at no extra cost."],
-            ["One year warranty", "Every instrument, covered from the day it arrives."],
-            ["Cash on delivery", "Pay when it reaches you, if you would rather."],
-            ["Also on Amazon & Flipkart", "Buy wherever your account already lives."],
-          ].map(([t, d], i) => (
-            <Reveal
-              key={t}
-              delay={i * 80}
-              className={`rule-b py-8 lg:border-b-0 ${
-                i > 0 ? "lg:border-l lg:border-hairline lg:pl-6" : "lg:pr-6"
-              }`}
-            >
-              <h3 className="t-display-tight text-base">{t}</h3>
-              <p className="mt-2 max-w-[30ch] text-sm text-graphite">{d}</p>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-    </>
-  );
+  const heroProduct = products.find(p => p.handle === "air-ultra-pro");
+  return <div className="storefront">
+    <section className="store-hero">
+      <div className="hero-copy">
+        <p className="eyebrow"><span className="eyebrow-line" /> BEAUTIFULLY ENGINEERED. EVERY DAY.</p>
+        <h1>Good hair.<br />Great days.<br /><em>Effortlessly.</em></h1>
+        <p className="hero-description">Meet your new everyday essential. Salon-inspired styling, powered by air. Designed around you.</p>
+        <div className="hero-actions"><Link href="/products/air-ultra-pro" className="shop-button">Discover Air Ultra Pro <StoreIcon name="arrow" /></Link><Link href="/catalog?category=Hair" className="text-link">Explore hair styling</Link></div>
+        <div className="hero-footnote"><StoreIcon name="shield" /><span>1-year warranty</span><i /><span>Free delivery, always</span></div>
+      </div>
+      <div className="hero-visual">
+        <Image src="/images/air-ultra-pro-package.jpeg" alt="Orynthis Air Ultra Pro multi-styler system with 6 attachments and package" fill priority sizes="(max-width: 760px) 100vw, 55vw" className="hero-photo" />
+        <span className="hero-image-label">YOUR EVERYDAY, UPGRADED.</span>
+        <Link className="hero-product-label" href="/products/air-ultra-pro"><div><span>MEET THE AIR ULTRA PRO</span><strong>One tool. Endless possibilities.</strong><small>{heroProduct?.price != null ? `Discover it at ${inr(heroProduct.price)}` : "Discover the styling collection"}</small></div><span className="round-arrow"><StoreIcon name="arrow" /></span></Link>
+        <div className="hero-caption"><span>01 / THE ART OF EVERYDAY</span><span>ORYNTHIS®</span></div>
+      </div>
+    </section>
+    <section className="benefit-strip" aria-label="Shopping benefits"><div className="shell benefit-grid">{benefits.map(b => <div className="benefit" key={b.title}><StoreIcon name={b.icon} /><div><strong>{b.title}</strong><span>{b.text}</span></div></div>)}</div></section>
+    <section className="shell collection-section" id="collection">
+      <div className="section-heading"><div><p className="eyebrow">CONSIDERED DESIGN. EVERYDAY DELIGHT.</p><h2>Small upgrades. <em>Big difference.</em></h2></div><Link href="/catalog" className="text-link">Shop the collection <StoreIcon name="arrow" /></Link></div>
+      <FeaturedCollection products={products} />
+    </section>
+    <section className="shell category-section">
+      <div className="section-heading"><div><p className="eyebrow">FIND YOUR EVERYDAY</p><h2>A little more <em>you.</em></h2></div><p>For your routine. Your soundtrack. Your point of view.</p></div>
+      <div className="category-grid">
+        <Link className="category-tile category-hair" href="/catalog?category=Hair"><Image src="/brand/hero-air-ultra-6-in-1.webp" alt="Orynthis multi-styler in use" fill sizes="(max-width:760px) 100vw, 40vw" /><div><span>01 / HAIR STYLING</span><h3>Your good hair era.</h3><p>Dry. Curl. Smooth. Make it yours.</p><span className="category-cta">Find your styler <StoreIcon name="arrow" /></span></div></Link>
+        <Link className="category-tile category-kitchen" href="/catalog?category=Kitchen"><Image src="/brand/hero-infranova-3500w.webp" alt="InfraNova 3500W Electric Infrared Cooktop" fill sizes="(max-width:760px) 100vw, 25vw" /><div><span>02 / KITCHEN RANGE</span><h3>Power meets any pan.</h3><p>3500W infrared heating for all cookware.</p><span className="category-cta">Meet InfraNova <StoreIcon name="arrow" /></span></div></Link>
+        <Link className="category-tile category-eyewear" href="/catalog?category=Wearable"><Image src="/brand/hero-air-vision.webp" alt="Air Vision AI smart glasses" fill sizes="(max-width:760px) 100vw, 25vw" /><div><span>03 / SMART EYEWEAR</span><h3>A fresh perspective.</h3><span className="category-cta">Meet Air Vision <StoreIcon name="arrow" /></span></div></Link>
+        <Link className="category-tile category-audio" href="/catalog?category=Audio"><Image src="/images/rockbox-vintage-01.webp" alt="Rockbox Vintage speaker with brass controls" fill sizes="(max-width:760px) 100vw, 25vw" /><div><span>04 / EVERYDAY AUDIO</span><h3>Set the mood.</h3><span className="category-cta">Find your sound <StoreIcon name="arrow" /></span></div></Link>
+      </div>
+    </section>
+    <section id="technology" className="engineering-section">
+      <div className="shell engineering-grid">
+        <div className="engineering-visual"><Image src="/story/air-ultra-6-in-1/frames/frame_060.webp" alt="An exploded view of the AirUltra 6-in-1 motor and styling attachments" fill sizes="(max-width:760px) 100vw, 50vw" /><Link href="/story/air-ultra-6-in-1" className="engineering-explore"><StoreIcon name="play" /> Explore the interactive story <StoreIcon name="arrow" /></Link></div>
+        <div className="engineering-copy"><p className="eyebrow">THE ORYNTHIS DIFFERENCE</p><h2>A little science.<br /><em>A lot of possibility.</em></h2><p>Great design makes the complicated feel simple. Our air stylers bring drying, curling and smoothing together in one thoughtfully designed tool.</p><div className="engineering-details"><div><strong>Air-powered styling</strong><span>Coanda airflow helps wrap and shape your hair.</span></div><div><strong>One handle. More possibilities.</strong><span>Interchangeable attachments for your changing routine.</span></div></div><Link href="/products/air-ultra-6-in-1" className="text-link">Get to know the AirUltra <StoreIcon name="arrow" /></Link></div>
+      </div>
+    </section>
+    <section className="shell film-section"><div className="film-copy"><p className="eyebrow">A MOMENT FOR YOURSELF</p><h2>Your routine.<br /><em>Reimagined.</em></h2><p>From your first morning meeting to your last evening plan. See the AirUltra in action.</p><Link href="/products/air-ultra-6-in-1#action-film" className="shop-button"><StoreIcon name="play" /> Watch the styling film</Link></div><Link className="film-visual" href="/products/air-ultra-6-in-1#action-film" aria-label="Watch the AirUltra styling film"><Image src="/videos/air-ultra-action-film-poster.webp" alt="See how to style with AirUltra" fill sizes="(max-width:760px) 100vw, 55vw" /><span className="film-play"><StoreIcon name="play" /></span></Link></section>
+    <section className="marketplace-strip shell"><div><p className="eyebrow">YOUR BRAND. YOUR WAY TO SHOP.</p><h2>Also at your favourite stores.</h2></div><div className="marketplace-logos">{MARKETPLACES.map(m => <a key={m.name} href={m.href} target="_blank" rel="noreferrer" aria-label={`Shop Orynthis on ${m.name} (opens in a new tab)`}><Image src={`/brand/${m.name.toLowerCase()}.webp`} alt={m.name} width={116} height={42} className="object-contain" /><span aria-hidden="true">↗</span></a>)}</div></section>
+  </div>;
 }

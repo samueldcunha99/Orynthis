@@ -1,42 +1,16 @@
 import type { Metadata } from "next";
-import { ProductCard } from "@/components/ProductCard";
-import { Reveal } from "@/components/Reveal";
+import { CatalogView } from "@/components/CatalogView";
 import { getProducts } from "@/lib/shopify";
-
 export const metadata: Metadata = {
-  title: "The range",
-  description:
-    "Every Orynthis instrument: multi-stylers built on Coanda airflow, AI smart glasses, portable and shelf Bluetooth speakers, and a double burner that runs two thermostats.",
+  title: "Shop the collection",
+  description: "Discover Orynthis hair stylers, smart eyewear, speakers and accessories. Thoughtfully designed essentials for your everyday.",
 };
-
-export default async function Catalog() {
-  const products = await getProducts();
-
-  return (
-    <div className="shell py-16 lg:py-24">
-      <Reveal className="rule-b pb-8">
-        <p className="t-label text-graphite">
-          The range · {products.length} products
-        </p>
-        <h1 className="t-display mt-4 text-[clamp(2.5rem,8vw,6rem)]">
-          The full range
-        </h1>
-        <p className="mt-6 max-w-[54ch] text-lg leading-relaxed text-graphite">
-          A short catalogue on purpose. The instruments each replace a shelf of
-          single-purpose appliances, and what is left is what they need to
-          travel. We would rather make a handful of things properly than forty
-          badly.
-        </p>
-      </Reveal>
-
-      {/* Wider cards than the home page — this is the considered view. */}
-      <div className="mt-14 grid gap-x-8 gap-y-16 sm:grid-cols-2">
-        {products.map((p, i) => (
-          <Reveal key={p.handle} delay={i * 90}>
-            <ProductCard product={p} priority={i < 2} />
-          </Reveal>
-        ))}
-      </div>
-    </div>
-  );
+export default async function Catalog({ searchParams }: { searchParams: Promise<{ category?: string | string[]; q?: string | string[] }> }) {
+  const [products, params] = await Promise.all([getProducts(), searchParams]);
+  const category = typeof params.category === "string" ? params.category : "all";
+  const query = typeof params.q === "string" ? params.q : "";
+  return <div className="shell">
+    <div className="catalog-intro"><p className="eyebrow">THE ORYNTHIS COLLECTION</p><h1>Everyday essentials.<br /><em>Extraordinary by design.</em></h1><p>Better hair days. Your favourite soundtrack. A fresh perspective. Find the little upgrade that feels like you.</p></div>
+    <CatalogView key={`${category}:${query}`} products={products} initialCategory={category} initialQuery={query} />
+  </div>;
 }

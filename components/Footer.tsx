@@ -1,131 +1,15 @@
 import Link from "next/link";
-import { products, SHOP } from "@/lib/products";
-import { Mark } from "./Mark";
-
-const policies = [
-  { href: `${SHOP}/policies/privacy-policy`, label: "Privacy policy" },
-  { href: `${SHOP}/policies/refund-policy`, label: "Refund policy" },
-  { href: `${SHOP}/policies/terms-of-service`, label: "Terms of service" },
-];
-
+import { MARKETPLACES, products, SHOP } from "@/lib/products";
+import { Wordmark } from "./Mark";
+import { StoreIcon } from "./StoreIcon";
 export function Footer() {
-  return (
-    <footer className="on-ink bg-ink text-paper-alt">
-      <div className="shell">
-        {/* Newsletter — one field, one job, honest about what arrives. */}
-        <div className="rule-b grid gap-8 py-16 md:grid-cols-[1fr_auto] md:items-end">
-          <div>
-            <h2 className="t-display text-[clamp(2rem,6vw,3.75rem)]">
-              Get there first
-            </h2>
-            <p className="mt-3 max-w-[42ch] text-sm text-graphite">
-              New instruments and restocks, sent when there is something to send.
-              No countdown timers.
-            </p>
-          </div>
-
-          <form
-            action={`${SHOP}#footer-newsletter`}
-            method="post"
-            className="flex w-full max-w-md items-center gap-0 border-b border-hairline-dark focus-within:border-accent"
-          >
-            <label htmlFor="footer-email" className="sr-only">
-              Email address
-            </label>
-            <input
-              id="footer-email"
-              name="contact[email]"
-              type="email"
-              required
-              placeholder="you@email.com"
-              className="t-data flex-1 bg-transparent py-3 text-sm outline-none placeholder:text-graphite"
-            />
-            <button type="submit" className="t-label px-2 py-3 hover:text-accent">
-              Sign up
-            </button>
-          </form>
-        </div>
-
-        {/* Link columns */}
-        <div className="rule-b grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <p className="t-label text-graphite">The range</p>
-            <ul className="mt-4 space-y-2.5">
-              {products.map((p) => (
-                <li key={p.handle}>
-                  <Link
-                    href={`/products/${p.handle}`}
-                    className="text-sm transition-colors hover:text-accent"
-                  >
-                    {p.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <p className="t-label text-graphite">Support</p>
-            <ul className="mt-4 space-y-2.5 text-sm">
-              <li>
-                <Link href="/track" className="transition-colors hover:text-accent">
-                  Track an order
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="transition-colors hover:text-accent">
-                  Contact us
-                </Link>
-              </li>
-              <li>
-                <Link href="/#technology" className="transition-colors hover:text-accent">
-                  How Coanda styling works
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <p className="t-label text-graphite">Policies</p>
-            <ul className="mt-4 space-y-2.5 text-sm">
-              {policies.map((l) => (
-                <li key={l.href}>
-                  <a href={l.href} className="transition-colors hover:text-accent">
-                    {l.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <p className="t-label text-graphite">Also available on</p>
-            <ul className="mt-4 space-y-2.5 text-sm">
-              <li>Amazon India</li>
-              <li>Flipkart</li>
-            </ul>
-            <p className="mt-6 text-sm text-graphite">
-              Ships across India. Cash on delivery available.
-            </p>
-          </div>
-        </div>
-
-        {/* The mark at scale — the last thing you see. */}
-        <div className="flex flex-col gap-6 py-10 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
-            <Mark className="h-8 w-8 shrink-0" />
-            <span
-              className="t-display text-[clamp(1.75rem,7vw,4rem)] leading-none"
-              style={{ letterSpacing: "0.04em" }}
-            >
-              Orynthis
-            </span>
-          </div>
-          <p className="t-label text-graphite">
-            © {new Date().getFullYear()} Orynthis
-          </p>
-        </div>
-      </div>
-    </footer>
-  );
+  return <footer className="store-footer"><div className="shell">
+    <div className="footer-main">
+      <div className="footer-brand"><Link href="/" className="store-wordmark" aria-label="Orynthis home"><Wordmark /></Link><p>Thoughtfully designed essentials that bring a little more possibility to your everyday.</p><Link className="footer-help" href="/contact">Here to help you choose <StoreIcon name="arrow" /></Link></div>
+      <div className="footer-column"><h3>Discover</h3><ul>{products.map(p => <li key={p.handle}><Link href={`/products/${p.handle}`}>{p.name}</Link></li>)}</ul></div>
+      <div className="footer-column"><h3>We’re here for you</h3><ul><li><Link href="/contact">Contact & support</Link></li><li><Link href="/track">Track your order</Link></li><li><Link href="/#technology">The Orynthis difference</Link></li><li><Link href="/story/air-ultra-6-in-1">Explore AirUltra</Link></li><li><a href={`${SHOP}/policies/refund-policy`}>Returns & refunds</a></li></ul></div>
+      <div className="footer-column"><h3>Shop your way</h3><ul>{MARKETPLACES.map(m => <li key={m.name}><a href={m.href} target="_blank" rel="noreferrer">{m.name} ↗<span className="sr-only"> (opens in a new tab)</span></a></li>)}<li>Free delivery across India</li><li>1-year product warranty</li></ul></div>
+    </div>
+    <div className="footer-bottom"><span>© {new Date().getFullYear()} Orynthis. All rights reserved.</span><div className="flex flex-wrap gap-6"><a href={`${SHOP}/policies/privacy-policy`}>Privacy policy</a><a href={`${SHOP}/policies/terms-of-service`}>Terms of service</a><span>India · INR ₹</span></div></div>
+  </div></footer>;
 }

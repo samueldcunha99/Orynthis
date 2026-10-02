@@ -3,9 +3,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AddButton } from "@/components/Cart";
 import { Gallery } from "@/components/Gallery";
+import { Product3DViewer } from "@/components/Product3DViewer";
+import { ActionStyleFilm } from "@/components/ActionStyleFilm";
 import { HeatScale } from "@/components/CoandaDiagram";
 import { ProductCard } from "@/components/ProductCard";
+import { ProductScrollStory } from "@/components/ProductScrollStory";
 import { Reveal } from "@/components/Reveal";
+import { BOX_CONTENTS, REVIEWS_DATA, PRODUCT_FAQS } from "@/lib/product-rich-data";
 import {
   SITE,
   byHandle,
@@ -92,7 +96,7 @@ export default async function ProductPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
 
-      <div className="shell py-10 lg:py-14">
+      <div className="shell product-detail py-10 lg:py-14">
         <nav className="t-label mb-8 text-graphite">
           <Link href="/catalog" className="transition-colors hover:text-accent">
             The range
@@ -150,7 +154,7 @@ export default async function ProductPage({ params }: Props) {
             {/* Nothing to add to a cart until the SKU is listed on the store. */}
             {buyable ? (
               <>
-                <AddButton handle={p.handle} className="btn btn-ink mt-6 w-full" />
+                <AddButton handle={p.handle} className="shop-button mt-6 w-full" label="Add to bag" />
                 <p className="t-label mt-4 text-graphite">
                   Free shipping · Pan India · 1 year warranty
                 </p>
@@ -167,9 +171,75 @@ export default async function ProductPage({ params }: Props) {
             )}
 
             <p className="mt-6 leading-relaxed">{p.body}</p>
+
+            {p.handle === "air-ultra-6-in-1" && (
+              <a
+                href="#scroll-story"
+                className="t-label mt-6 inline-flex w-full items-center justify-center gap-2.5 border border-hairline bg-paper-alt px-4 py-3 text-ink transition-colors hover:border-accent hover:bg-white"
+              >
+                <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+                <span>Explore Interactive Exploded Story ↓</span>
+              </a>
+            )}
+
+            {(p.handle === "air-ultra-pro" || p.handle === "silkcomb-cordless") && (
+              <a
+                href="#action-film"
+                className="t-label mt-6 inline-flex w-full items-center justify-center gap-2.5 border border-hairline bg-paper-alt px-4 py-3 text-ink transition-colors hover:border-accent hover:bg-white"
+              >
+                <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+                <span>Watch In-Action Styling Film ↓</span>
+              </a>
+            )}
+
+            {p.model3d && (
+              <a
+                href="#model-3d"
+                className="t-label mt-6 inline-flex w-full items-center justify-center gap-2.5 border border-hairline bg-paper-alt px-4 py-3 text-ink transition-colors hover:border-accent hover:bg-white"
+              >
+                <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+                <span>Interactive 3D Hardware Studio (Rotate 360°) ↓</span>
+              </a>
+            )}
           </div>
         </div>
       </div>
+
+      {/* ── Interactive Scrollytelling Architecture Story (AirUltra 6-in-1) ── */}
+      {p.handle === "air-ultra-6-in-1" && (
+        <div id="scroll-story" className="rule-t scroll-mt-16">
+          <ProductScrollStory />
+        </div>
+      )}
+
+      {/* ── In-Action Styling Film (AirUltra 6-in-1 & Air Ultra Pro) ── */}
+      {(p.handle === "air-ultra-6-in-1" || p.handle === "air-ultra-pro" || p.handle === "silkcomb-cordless") && (
+        <div id="action-film" className="rule-t scroll-mt-16">
+          <ActionStyleFilm handle={p.handle} />
+        </div>
+      )}
+
+      {/* ── Interactive 3D Model Explorer (InfraNova & 3D Products) ── */}
+      {p.model3d && (
+        <div id="model-3d" className="rule-t scroll-mt-16 bg-[#f7f6f2] py-14 lg:py-20 border-b border-hairline">
+          <div className="shell">
+            <Reveal className="mb-8">
+              <span className="t-label text-accent font-semibold">360° Realtime Hardware Studio</span>
+              <h2 className="t-display text-2xl lg:text-4xl mt-2">Inspect the design in 3D</h2>
+              <p className="mt-2 text-graphite text-sm max-w-2xl">
+                Precision-rendered 3D CAD model. Click, drag and zoom to examine the crystal glass deck, brushed steel grab rails, and front digital rotary controls from every angle.
+              </p>
+            </Reveal>
+            <Reveal delay={100}>
+              <Product3DViewer
+                src={p.model3d}
+                poster={p.images[0]}
+                title={p.name}
+              />
+            </Reveal>
+          </div>
+        </div>
+      )}
 
       {/* What it does, and why that is hard. */}
       <section className="bg-paper-alt">
@@ -185,6 +255,36 @@ export default async function ProductPage({ params }: Props) {
               </Reveal>
             ))}
           </div>
+
+          {/* Universal Cookware Compatibility showcase for InfraNova */}
+          {p.handle === "infranova-3500w" && (
+            <Reveal className="rule-t mt-14 pt-12">
+              <div className="flex flex-wrap items-baseline justify-between gap-4">
+                <div>
+                  <span className="t-label text-accent font-semibold">Universal Cookware Freedom</span>
+                  <h2 className="t-display text-xl lg:text-3xl mt-1">Works with all flat-bottom cookware</h2>
+                </div>
+                <p className="t-label text-xs text-graphite max-w-md">
+                  InfraNova uses radiant far-infrared heating instead of electromagnetic induction, eliminating cookware restrictions.
+                </p>
+              </div>
+              <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                {[
+                  { name: "Stainless Steel", desc: "Kadhais, saucepans & milk pans" },
+                  { name: "Cast Iron", desc: "Skillets, dutch ovens & tawas" },
+                  { name: "Aluminium Capable", desc: "Pressure cookers & handis" },
+                  { name: "Copper Capable", desc: "Traditional brass & copper pots" },
+                  { name: "Enamel & Ceramic", desc: "Glazed pans & heatproof glass" },
+                ].map((item) => (
+                  <div key={item.name} className="border border-hairline bg-white p-4 shadow-xs">
+                    <span className="text-accent text-xs font-mono">✓ COMPATIBLE</span>
+                    <h4 className="t-display-tight text-sm mt-2 text-ink">{item.name}</h4>
+                    <p className="text-[0.6875rem] text-graphite mt-1">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+          )}
 
           {/* The heat scale belongs only to the product that has one. */}
           {p.handle === "air-ultra-6-in-1" && (
@@ -215,6 +315,98 @@ export default async function ProductPage({ params }: Props) {
           </dl>
         </Reveal>
       </section>
+
+      {/* ── What's in the Box ─────────────────────────────────────────── */}
+      {BOX_CONTENTS[p.handle] && (
+        <section className="bg-paper-alt border-t border-hairline py-16 lg:py-24">
+          <div className="shell">
+            <Reveal className="rule-b pb-6">
+              <span className="t-label text-accent font-semibold">Packaging & Kit</span>
+              <h2 className="t-display text-2xl lg:text-4xl mt-2">What arrives in the box</h2>
+              <p className="mt-2 text-graphite text-sm">
+                Every component serialized, individually seated, and protected for transit.
+              </p>
+            </Reveal>
+
+            <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {BOX_CONTENTS[p.handle].map((item, i) => (
+                <div key={item.item} className="border border-hairline bg-white p-5 shadow-xs">
+                  <span className="t-label text-[0.625rem] text-accent font-mono">
+                    PART 0{i + 1}
+                  </span>
+                  <h4 className="t-display-tight text-sm mt-2">{item.item}</h4>
+                  <p className="mt-1 text-xs text-graphite leading-relaxed">
+                    {item.detail}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── Verified Customer Reviews & Testimonials ──────────────────── */}
+      {REVIEWS_DATA[p.handle] && (
+        <section className="shell py-16 lg:py-24 border-t border-hairline">
+          <Reveal className="rule-b pb-8 flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <p className="t-label text-accent font-semibold">Customer Experiences</p>
+              <h2 className="t-display text-2xl lg:text-4xl mt-2">Verified Owner Reviews</h2>
+            </div>
+            <div className="flex items-center gap-4 bg-white border border-hairline px-6 py-3">
+              <span className="t-data text-3xl font-bold text-ink">4.9</span>
+              <div>
+                <div className="text-accent text-sm">★★★★★</div>
+                <p className="t-label text-[0.625rem] text-graphite mt-0.5">
+                  Based on verified Indian orders
+                </p>
+              </div>
+            </div>
+          </Reveal>
+
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {REVIEWS_DATA[p.handle].map((rev) => (
+              <div key={rev.name} className="border border-hairline bg-white p-6 shadow-sm flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-accent font-mono">{"★".repeat(rev.rating)}</span>
+                    <span className="t-data text-graphite text-[0.6875rem]">{rev.date}</span>
+                  </div>
+                  <h4 className="t-display-tight text-base mt-3">{rev.title}</h4>
+                  <p className="mt-3 text-xs text-graphite leading-relaxed">
+                    &ldquo;{rev.comment}&rdquo;
+                  </p>
+                </div>
+                <div className="mt-6 pt-4 border-t border-hairline flex items-center justify-between text-xs">
+                  <span className="font-semibold text-ink">{rev.name}</span>
+                  <span className="t-label text-[0.625rem] text-accent">✓ Verified Buyer · {rev.city}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ── Product Specific FAQs ─────────────────────────────────────── */}
+      {PRODUCT_FAQS[p.handle] && (
+        <section className="bg-paper-alt border-t border-hairline py-16 lg:py-24">
+          <div className="shell max-w-4xl">
+            <Reveal className="rule-b pb-6">
+              <span className="t-label text-graphite">Frequently Asked</span>
+              <h2 className="t-display text-2xl lg:text-3xl mt-2">Questions about {p.name}</h2>
+            </Reveal>
+
+            <div className="mt-8 divide-y divide-hairline border-y border-hairline bg-white">
+              {PRODUCT_FAQS[p.handle].map((faq) => (
+                <div key={faq.q} className="p-6">
+                  <h4 className="t-display-tight text-base">{faq.q}</h4>
+                  <p className="mt-2 text-sm text-graphite leading-relaxed">{faq.a}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Rest of the range */}
       <section className="shell pb-20 lg:pb-28">
