@@ -33,7 +33,7 @@ const jetbrains = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: {
-    default: "Orynthis — Beautifully engineered. Every day.",
+    default: "Orynthis — Instruments built around moving air",
     template: "%s — Orynthis",
   },
   /* Kept under ~155 characters: past that Google truncates mid-sentence and
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   description:
     "Hair stylers, smart glasses, Bluetooth speakers and kitchen appliances built around what they actually do. Free shipping across India, one year warranty.",
   openGraph: {
-    title: "Orynthis — Beautifully engineered. Every day.",
+    title: "Orynthis — Instruments built around moving air",
     description:
       "Coanda airflow styling, AI smart glasses, Bluetooth speakers and a double burner that runs two thermostats. Shipped across India.",
     type: "website",

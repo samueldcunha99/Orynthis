@@ -150,14 +150,14 @@ function Drawer() {
         // aria-hidden hides it from screen readers, but the drawer is only
         // translated off-screen — without inert its buttons stay tabbable.
         inert={!open}
-        className={`store-cart fixed top-0 right-0 z-50 flex h-dvh w-full max-w-[27rem] flex-col transition-transform duration-500 ${
+        className={`on-ink fixed top-0 right-0 z-50 flex h-dvh w-full max-w-[27rem] flex-col bg-ink text-paper-alt transition-transform duration-500 ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
         style={{ transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)" }}
       >
         <header className="rule-b flex items-center justify-between px-6 py-5">
           <span className="t-label">
-            Your bag <span className="text-graphite">/ {lines.reduce((total, line) => total + line.qty, 0)}</span>
+            Cart <span className="text-graphite">/ {lines.length}</span>
           </span>
           <button
             onClick={() => setOpen(false)}
@@ -171,12 +171,12 @@ function Drawer() {
           <div className="flex flex-1 flex-col items-center justify-center gap-5 px-8 text-center">
             <p className="t-display-tight text-xl">Nothing here yet</p>
             <p className="max-w-[22ch] text-sm text-graphite">
-              Your next everyday essential is waiting to be discovered.
+              A short range of instruments, built to be used daily. Start there.
             </p>
             <Link
               href="/catalog"
               onClick={() => setOpen(false)}
-              className="shop-button"
+              className="btn btn-line text-paper-alt"
             >
               <span>Browse the range</span>
             </Link>
@@ -229,7 +229,7 @@ function Drawer() {
               <p className="t-label mt-2 text-graphite">
                 Free shipping · Pan India
               </p>
-              <a href={href} className="shop-button mt-5 w-full">
+              <a href={href} className="btn btn-accent mt-5 w-full">
                 <span>Checkout</span>
               </a>
               <p className="mt-3 text-center text-[0.6875rem] text-graphite">

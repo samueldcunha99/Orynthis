@@ -51,4 +51,3 @@ next-env.d.ts
 # Upscaler scratch — 269 MB of intermediate 4x PNGs, not source.
 # The shipped assets are the webp files under public/.
 /to be usacled/
-/video story/

@@ -2,9 +2,6 @@ import type { NextConfig } from "next";
 
 /* Every image ships from /public now, so no remote hosts to allow. */
 const nextConfig: NextConfig = {
-  images: {
-    unoptimized: true,
-  },
   async redirects() {
     return [
       /* www and the apex are both attached to the Worker, so without this

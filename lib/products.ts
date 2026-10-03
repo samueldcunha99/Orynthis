@@ -27,8 +27,6 @@ export type Product = {
       that gets the final say either way. */
   available?: boolean;
   images: string[];
-  /** Optional path to an interactive 3D GLB model for real-time 360 inspection */
-  model3d?: string;
   /** The claim the product is actually built on. */
   thesis: string;
   body: string;
@@ -55,10 +53,14 @@ export const products: Product[] = [
        the top. m09 leads because it is the one clean device shot. */
     images: [
       "/images/air-ultra-pro-m09.jpeg",
-      "/images/air-ultra-pro-package.jpeg",
       "/images/air-ultra-pro-m01.jpeg",
+      "/images/air-ultra-pro-m02.jpeg",
       "/images/air-ultra-pro-m03.jpeg",
+      "/images/air-ultra-pro-m04.jpeg",
+      "/images/air-ultra-pro-m05.jpeg",
+      "/images/air-ultra-pro-m06.jpeg",
       "/images/air-ultra-pro-m07.jpeg",
+      "/images/air-ultra-pro-m08.jpeg",
     ],
     thesis: "Curls formed by airflow, not by a hot plate pressed against your hair.",
     body:
@@ -99,12 +101,25 @@ export const products: Product[] = [
     variantId: "58473003024465",
     shopifyHandle:
       "6-in-1-multi-styler-hair-styling-tools-interchangeable-volumizer-secador-de-cabelo-hot-air-brush-blow-brush-hair-dryer",
-    /* Curated high-impact brand set: clean product hero, flat lay, and key campaign visuals */
+    /* Brand set only, same reasoning as the Pro. m08 and m07 lead — they are
+       the two clean white shots of the handle with every attachment laid
+       out, which is what a card thumbnail needs to be legible. */
     images: [
       "/images/air-ultra-6-in-1-m08.jpeg",
       "/images/air-ultra-6-in-1-m07.jpeg",
       "/images/air-ultra-6-in-1-m01.jpeg",
+      "/images/air-ultra-6-in-1-m02.jpeg",
+      "/images/air-ultra-6-in-1-m03.jpeg",
+      "/images/air-ultra-6-in-1-m04.jpeg",
+      "/images/air-ultra-6-in-1-m05.jpeg",
+      "/images/air-ultra-6-in-1-m06.jpeg",
       "/images/air-ultra-6-in-1-m09.jpeg",
+      "/images/air-ultra-6-in-1-m10.jpeg",
+      "/images/air-ultra-6-in-1-m11.jpeg",
+      "/images/air-ultra-6-in-1-m12.jpeg",
+      "/images/air-ultra-6-in-1-m13.jpeg",
+      "/images/air-ultra-6-in-1-m14.jpeg",
+      "/images/air-ultra-6-in-1-m15.jpeg",
     ],
     thesis: "The whole drawer of styling tools, reduced to one handle and six heads.",
     body:
@@ -136,96 +151,6 @@ export const products: Product[] = [
       { label: "Warranty", value: "1 year" },
     ],
     reviews: { count: 53, stars: 3.6 },
-  },
-  {
-    handle: "silkcomb-cordless",
-    name: "Silkcomb Cordless",
-    series: "Straightening Brush",
-    category: "Hair",
-    line: "Cordless ceramic straightener with 4000 mAh battery & negative ion smoothing.",
-    price: 2799,
-    compareAt: 3799,
-    variantId: null,
-    images: [
-      "/images/silkcomb-cordless-01.webp",
-      "/images/silkcomb-cordless-package.webp",
-      "/images/silkcomb-cordless-02.webp",
-      "/images/silkcomb-cordless-03.webp",
-    ],
-    thesis: "Salon-smooth, frizz-free hair wherever your day takes you — cordless, rechargeable, and powered by negative ions.",
-    body:
-      "Designed for true styling freedom, the Silkcomb Cordless combines rapid PTC ceramic heating with negative ion smoothing into a lightweight, portable brush. Powered by a high-capacity 4000 mAh battery with fast Type-C recharging, it delivers up to 200°C of consistent heat without needing a wall socket. Ceramic-coated anti-scald bristles protect your scalp while detangling, locking in moisture and leaving strands reflective, soft, and completely frizz-free.",
-    features: [
-      {
-        title: "Cordless 4000 mAh freedom",
-        text: "Style anywhere, anytime without hunting for an electrical outlet. Perfect for on-the-go touch-ups, commute fixes, and travel routines on a single USB Type-C charge.",
-      },
-      {
-        title: "Negative ion frizz control",
-        text: "Advanced negative ion discharge neutralises static and seals the hair cuticle as you glide through, eliminating frizz while preserving natural moisture.",
-      },
-      {
-        title: "Ceramic anti-scald bristles & smart LCD",
-        text: "PTC ceramic heating warms evenly across 3 customizable heat levels (160°C – 200°C) with real-time digital temperature and battery readout on the smart LCD screen.",
-      },
-    ],
-    specs: [
-      { label: "Battery", value: "4000 mAh rechargeable lithium-ion" },
-      { label: "Charging", value: "USB Type-C (full charge in 3 hours)" },
-      { label: "Temperature", value: "3 levels (160°C – 200°C / up to 300°F)" },
-      { label: "Heating system", value: "Fast PTC ceramic heating" },
-      { label: "Bristles", value: "Ceramic-coated with anti-scald protective tips" },
-      { label: "Technology", value: "Advanced Negative Ion generator" },
-      { label: "Display", value: "Smart digital LCD temperature & battery screen" },
-      { label: "Color", value: "Sky Blue" },
-      { label: "Warranty", value: "1 year replacement warranty" },
-    ],
-    reviews: { count: 13, stars: 3.7 },
-  },
-  {
-    handle: "infranova-3500w",
-    name: "InfraNova 3500W",
-    series: "Infrared Cooktop",
-    category: "Kitchen",
-    line: "3500W high-power infrared cooking with crystal glass surface & universal cookware freedom.",
-    price: 3989,
-    compareAt: 10999,
-    variantId: null,
-    model3d: "/models/infranova-3500w.glb",
-    images: [
-      "/images/infranova-3500w-01.webp",
-      "/images/infranova-3500w-02.webp",
-      "/images/infranova-3500w-03.webp",
-    ],
-    thesis: "Instant 3500W radiant heat with zero cookware limitations — boils, fries, and simmers on any flat-bottom pan.",
-    body:
-      "Engineered around high-output 3500W far-infrared heating and a reinforced crystal glass cooking deck, the InfraNova breaks free from traditional induction restrictions. Stainless steel, cast iron, copper, aluminium, and ceramic pans all heat instantly with uniform thermal distribution. Digital touch controls with dual LED displays, rotary precision dial, and four pre-calibrated cooking modes (Stir Fry, BBQ, Hot Pot, Soup) put high-heat culinary performance in a sleek, portable form.",
-    features: [
-      {
-        title: "Universal cookware compatibility",
-        text: "Unlike magnetic induction cooktops limited strictly to ferrous iron pots, InfraNova's radiant far-infrared heating works seamlessly across all flat-bottom cookware — stainless steel, cast iron, aluminium, copper, and enamel.",
-      },
-      {
-        title: "3500W peak culinary performance",
-        text: "One of India's most powerful portable electric cooktops. Delivers rapid heat transfer for intense stir-frying, fast boiling, and consistent simmering with responsive digital wattage and timer control.",
-      },
-      {
-        title: "Reinforced crystal glass & active cooling",
-        text: "Built with heavy-duty crystal glass that resists thermal shock and cleans with a single wipe. An internal high-flow cooling fan and dual thermal cutoffs protect vital electronics under continuous cooking.",
-      },
-    ],
-    specs: [
-      { label: "Power output", value: "3500 W maximum" },
-      { label: "Voltage", value: "220–240 V ~ 50/60 Hz" },
-      { label: "Cooking surface", value: "High-strength crystal glass plate" },
-      { label: "Controls", value: "Digital touch panel + rotary dial + LED timer/watt display" },
-      { label: "Preset modes", value: "4 presets (Stir Fry, BBQ, Hot Pot, Soup)" },
-      { label: "Cookware compatibility", value: "All flat-bottom cookware (Stainless steel, cast iron, aluminium, copper, ceramic)" },
-      { label: "Power cord", value: "1.2 m heavy-duty power lead" },
-      { label: "Safety features", value: "Automatic overheat cutoff, auto shut-off, high load chassis" },
-      { label: "Warranty", value: "2 years pan-India brand warranty" },
-    ],
-    reviews: { count: 5, stars: 3.9 },
   },
   {
     handle: "air-vision-ai",
@@ -541,18 +466,6 @@ export const heroSlides: HeroSlide[] = [
       { v: "1000", u: "W", k: "Dryer core" },
       { v: "6", u: "heads", k: "Interchangeable" },
       { v: "3", u: "levels", k: "Measured heat" },
-    ],
-  },
-  {
-    handle: "infranova-3500w",
-    headline: ["Any pan,", "3500 watts"],
-    copy: "Far-infrared radiant heat works directly with all flat-bottom cookware — stainless steel, cast iron, aluminium and copper. 3500W instant power under crystal glass.",
-    image: "/brand/hero-infranova-3500w.webp",
-    stats: [
-      { v: "3500", u: "W", k: "Peak power" },
-      { v: "All", u: "pots", k: "Universal cookware" },
-      { v: "4", u: "modes", k: "Smart presets" },
-      { v: "2", u: "years", k: "Warranty" },
     ],
   },
   {
